@@ -24,10 +24,6 @@ public class Country extends BaseNumericKeyEntity {
     @OneToMany(mappedBy = "country")
     private List<City> cities;
 
-    public Country(String name) {
-        this.name = name;
-    }
-
     public Country(Long id, String name) {
         setId(id);
         this.name = name;

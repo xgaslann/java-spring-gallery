@@ -11,8 +11,12 @@ import com.xgaslan.repositories.LanguageRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Component
+@Transactional
 public class ApplicationSeeder implements ApplicationRunner {
 
     private final LanguageRepository _languageRepository;
@@ -62,8 +66,11 @@ public class ApplicationSeeder implements ApplicationRunner {
     }
 
     private void seedCountry(Country country) {
-        if(!_countryRepository.existsById(country.getId())) {
-            _countryRepository.saveAndFlush(country);
+        Optional<Country> existing = _countryRepository.findById(country.getId());
+        if (existing.isPresent()) {
+            Country dbCountry = existing.get();
+            dbCountry.setName(country.getName());
+            _countryRepository.save(dbCountry);
         }
     }
 
@@ -74,10 +81,10 @@ public class ApplicationSeeder implements ApplicationRunner {
 
     private void seedCity(Long id, String name, Long countryId) {
         if(!_cityRepository.existsById(id)) {
-            Country country = _countryRepository.findById(countryId)
-                    .orElseThrow(() -> new RuntimeException("Country not found for ID: " + countryId));
-            City city = new City(id, name, country);
-            _cityRepository.saveAndFlush(city);
+            Optional<Country> country = _countryRepository.findById(countryId);
+
+            City city = new City(id, name, country.orElse(null));
+            _cityRepository.save(city);
         }
     }
 }

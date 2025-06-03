@@ -1,6 +1,5 @@
 package com.xgaslan.exceptions;
 
-import com.xgaslan.result.ErrorModel;
 import com.xgaslan.result.ErrorResult;
 import com.xgaslan.result.ServiceResult;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,87 +20,96 @@ public class GlobalExceptionHandler {
         this.environment = environment;
     }
 
-    // 404 Not Found
     @ExceptionHandler(ApplicationNotFoundException.class)
     public ResponseEntity<ServiceResult<Object>> handleNotFound(
             ApplicationNotFoundException ex, HttpServletRequest req) {
 
-        ErrorModel error = ErrorModel.of(
-                ex.getCode(),
-                ErrorMessageRegistry.get(ex.getCode()),
-                isProd() ? null : ex.getMessage()
-        );
-        log.warn("[{}] NotFoundException: code={} path={}", error.getTraceId(), ex.getCode(), req.getRequestURI());
+        ErrorResult error = ErrorResult.builder()
+                .code(ex.getCode())
+                .message(ErrorMessageRegistry.get(ex.getCode()))
+                .detail(isProd() ? null : ex.getMessage())
+                .build();
 
-        ErrorResult errorResult = new ErrorResult(HttpStatus.NOT_FOUND.value(), error);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ServiceResult.error(errorResult));
+        ServiceResult<Object> result = ServiceResult.failure(
+                error,
+                HttpStatus.NOT_FOUND.value()
+        );
+        log.warn("[{}] NotFoundException: code={} path={}", result.getTraceId(), ex.getCode(), req.getRequestURI());
+        return ResponseEntity.status(result.getStatus()).body(result);
     }
 
-    // 403 Forbidden
     @ExceptionHandler(ApplicationForbiddenException.class)
     public ResponseEntity<ServiceResult<Object>> handleForbidden(
             ApplicationForbiddenException ex, HttpServletRequest req) {
 
-        ErrorModel error = ErrorModel.of(
-                ex.getCode(),
-                ErrorMessageRegistry.get(ex.getCode()),
-                isProd() ? null : ex.getMessage()
-        );
-        log.warn("[{}] ForbiddenException: code={} path={}", error.getTraceId(), ex.getCode(), req.getRequestURI());
+        ErrorResult error = ErrorResult.builder()
+                .code(ex.getCode())
+                .message(ErrorMessageRegistry.get(ex.getCode()))
+                .detail(isProd() ? null : ex.getMessage())
+                .build();
 
-        ErrorResult errorResult = new ErrorResult(HttpStatus.FORBIDDEN.value(), error);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ServiceResult.error(errorResult));
+        ServiceResult<Object> result = ServiceResult.failure(
+                error,
+                HttpStatus.FORBIDDEN.value()
+        );
+        log.warn("[{}] ForbiddenException: code={} path={}", result.getTraceId(), ex.getCode(), req.getRequestURI());
+        return ResponseEntity.status(result.getStatus()).body(result);
     }
 
-    // 401 Unauthorized
     @ExceptionHandler(ApplicationUnauthorizedException.class)
     public ResponseEntity<ServiceResult<Object>> handleUnauthorized(
             ApplicationUnauthorizedException ex, HttpServletRequest req) {
 
-        ErrorModel error = ErrorModel.of(
-                ex.getCode(),
-                ErrorMessageRegistry.get(ex.getCode()),
-                isProd() ? null : ex.getMessage()
-        );
-        log.info("[{}] UnauthorizedException: code={} path={}", error.getTraceId(), ex.getCode(), req.getRequestURI());
+        ErrorResult error = ErrorResult.builder()
+                .code(ex.getCode())
+                .message(ErrorMessageRegistry.get(ex.getCode()))
+                .detail(isProd() ? null : ex.getMessage())
+                .build();
 
-        ErrorResult errorResult = new ErrorResult(HttpStatus.UNAUTHORIZED.value(), error);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ServiceResult.error(errorResult));
+        ServiceResult<Object> result = ServiceResult.failure(
+                error,
+                HttpStatus.UNAUTHORIZED.value()
+        );
+        log.info("[{}] UnauthorizedException: code={} path={}", result.getTraceId(), ex.getCode(), req.getRequestURI());
+        return ResponseEntity.status(result.getStatus()).body(result);
     }
 
-    // 400 BadRequest & Business Exception
     @ExceptionHandler(ApplicationBusinessException.class)
     public ResponseEntity<ServiceResult<Object>> handleBusiness(
             ApplicationBusinessException ex, HttpServletRequest req) {
 
-        ErrorModel error = ErrorModel.of(
-                ex.getCode(),
-                ErrorMessageRegistry.get(ex.getCode()),
-                isProd() ? null : ex.getMessage()
-        );
-        log.warn("[{}] BusinessException: code={} path={}", error.getTraceId(), ex.getCode(), req.getRequestURI());
+        ErrorResult error = ErrorResult.builder()
+                .code(ex.getCode())
+                .message(ErrorMessageRegistry.get(ex.getCode()))
+                .detail(isProd() ? null : ex.getMessage())
+                .build();
 
-        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.value(), error);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ServiceResult.error(errorResult));
+        ServiceResult<Object> result = ServiceResult.failure(
+                error,
+                HttpStatus.BAD_REQUEST.value()
+        );
+        log.warn("[{}] BusinessException: code={} path={}", result.getTraceId(), ex.getCode(), req.getRequestURI());
+        return ResponseEntity.status(result.getStatus()).body(result);
     }
 
-    // 500 Internal Server Error (all other exceptions)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ServiceResult<Object>> handleAny(
             Exception ex, HttpServletRequest req) {
 
-        ErrorModel error = ErrorModel.of(
-                ErrorCodes.System.INTERNAL_SERVER_ERROR,
-                ErrorMessageRegistry.get(ErrorCodes.System.INTERNAL_SERVER_ERROR),
-                isProd() ? null : ex.toString()
-        );
-        log.error("[{}] UnknownException: path={} message={}", error.getTraceId(), req.getRequestURI(), ex.getMessage(), ex);
+        ErrorResult error = ErrorResult.builder()
+                .code(ErrorCodes.System.INTERNAL_SERVER_ERROR)
+                .message(ErrorMessageRegistry.get(ErrorCodes.System.INTERNAL_SERVER_ERROR))
+                .detail(isProd() ? null : ex.toString())
+                .build();
 
-        ErrorResult errorResult = new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR.value(), error);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ServiceResult.error(errorResult));
+        ServiceResult<Object> result = ServiceResult.failure(
+                error,
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+        log.error("[{}] UnknownException: path={} message={}", result.getTraceId(), req.getRequestURI(), ex.getMessage(), ex);
+        return ResponseEntity.status(result.getStatus()).body(result);
     }
 
-    // Checks if the active Spring profile is production
     private boolean isProd() {
         return environment != null && environment.matchesProfiles("prod");
     }

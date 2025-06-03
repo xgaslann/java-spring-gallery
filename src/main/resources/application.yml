@@ -1,27 +1,8 @@
 spring:
   application:
     name: gallery
-
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        default_schema: gallery
-        format_sql: true
-    show-sql: true
-
+  profiles:
+    active: dev # Geliştiricinin localinde default dev
 server:
   servlet:
     context-path: /api
-
-jwt:
-  secret: ${JWT_SECRET_KEY}
-  expirationTimeMillis: ${JWT_EXPIRATION_TIME_MILLIS}
-  issuer: ${JWT_ISSUER}
-  audience: ${JWT_AUDIENCE}
