@@ -1,9 +1,12 @@
 package com.xgaslan.data.entities;
 
 import com.xgaslan.data.entities.base.BaseNumericKeyEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +22,12 @@ import java.util.Date;
 @AllArgsConstructor
 public class RefreshToken extends BaseNumericKeyEntity {
 
+    @Column(nullable = false, unique = true)
+    @NotBlank
     private String token;
 
-    private String refreshToken;
-
+    @Column(nullable = false)
+    @NotNull
     private Date expiryDate;
 
     @ManyToOne

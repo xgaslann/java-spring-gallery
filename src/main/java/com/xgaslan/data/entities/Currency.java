@@ -2,6 +2,7 @@ package com.xgaslan.data.entities;
 
 import com.xgaslan.data.entities.base.BaseStringKeyEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class Currency extends BaseStringKeyEntity {
 
     @Column(nullable = false, unique = true)
+    @NotBlank
     private String text;
 
     public Currency(String id, String text) {

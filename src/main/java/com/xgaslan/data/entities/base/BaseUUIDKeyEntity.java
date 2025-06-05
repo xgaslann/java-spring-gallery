@@ -11,7 +11,7 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class BaseUUIDKeyEntity extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 }

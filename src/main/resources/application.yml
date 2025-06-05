@@ -2,7 +2,19 @@ spring:
   application:
     name: gallery
   profiles:
-    active: dev # Geliştiricinin localinde default dev
+    active: dev
 server:
   servlet:
     context-path: /api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+      base-path: /actuator # default aslında bu, yine de yaz.
+  endpoint:
+    health:
+      show-details: always

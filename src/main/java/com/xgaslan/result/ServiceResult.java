@@ -115,4 +115,18 @@ public class ServiceResult<T> {
     private static String generateTraceId() {
         return java.util.UUID.randomUUID().toString().replace("-", "");
     }
+
+    public static <T> ServiceResult<T> fromError(ServiceResult<?> errorResult) {
+        if (errorResult == null || errorResult.isSuccess() || errorResult.getError() == null)
+            throw new IllegalArgumentException("ErrorResult must be an error!");
+
+        return ServiceResult.<T>builder()
+                .success(false)
+                .status(errorResult.getStatus())
+                .traceId(errorResult.getTraceId())
+                .timestamp(errorResult.getTimestamp())
+                .data(null)
+                .error(errorResult.getError())
+                .build();
+    }
 }

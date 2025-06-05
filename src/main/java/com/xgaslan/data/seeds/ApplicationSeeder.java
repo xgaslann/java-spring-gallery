@@ -4,10 +4,10 @@ import com.xgaslan.data.entities.City;
 import com.xgaslan.data.entities.Country;
 import com.xgaslan.data.entities.Currency;
 import com.xgaslan.data.entities.Language;
-import com.xgaslan.repositories.CityRepository;
-import com.xgaslan.repositories.CountryRepository;
-import com.xgaslan.repositories.CurrencyRepository;
-import com.xgaslan.repositories.LanguageRepository;
+import com.xgaslan.repositories.ICityRepository;
+import com.xgaslan.repositories.ICountryRepository;
+import com.xgaslan.repositories.ICurrencyRepository;
+import com.xgaslan.repositories.ILanguageRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,13 @@ import java.util.Optional;
 @Transactional
 public class ApplicationSeeder implements ApplicationRunner {
 
-    private final LanguageRepository _languageRepository;
-    private final CountryRepository _countryRepository;
-    private final CityRepository _cityRepository;
-    private final CurrencyRepository _currencyRepository;
+    private final ILanguageRepository _I_languageRepository;
+    private final ICountryRepository _countryRepository;
+    private final ICityRepository _cityRepository;
+    private final ICurrencyRepository _currencyRepository;
 
-    public ApplicationSeeder(LanguageRepository languageRepository, CountryRepository countryRepository, CityRepository cityRepository, CurrencyRepository currencyRepository) {
-        _languageRepository = languageRepository;
+    public ApplicationSeeder(ILanguageRepository ILanguageRepository, ICountryRepository countryRepository, ICityRepository cityRepository, ICurrencyRepository currencyRepository) {
+        _I_languageRepository = ILanguageRepository;
         _countryRepository = countryRepository;
         _cityRepository = cityRepository;
         _currencyRepository = currencyRepository;
@@ -45,8 +45,8 @@ public class ApplicationSeeder implements ApplicationRunner {
     }
 
     private void seedLanguage(Language language) {
-        if(!_languageRepository.existsById(language.getId())) {
-            _languageRepository.save(language);
+        if(!_I_languageRepository.existsById(language.getId())) {
+            _I_languageRepository.save(language);
         }
     }
 

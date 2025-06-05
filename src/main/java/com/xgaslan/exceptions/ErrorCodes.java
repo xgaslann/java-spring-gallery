@@ -30,6 +30,7 @@ public final class ErrorCodes {
             public static final String INTERNAL_SERVER_ERROR = "Business.Internal.Server.Error";
             public static final String VALIDATION_ERROR = "Business.Validation.Error";
             public static final String INVALID_REQUEST_ERROR = "Business.Invalid.Request.Error";
+            public static final String INVALID_TOKEN_ERROR = "Business.Invalid.Token.Error";
 
             private Common() {}
         }

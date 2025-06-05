@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Address extends BaseNumericKeyEntity {
     @Column(nullable = false)
+    @NotBlank
     private String street;
 
     @Column(nullable = false)
+    @NotBlank
     private String neighborhood;
 
     @ManyToOne(optional = false)
